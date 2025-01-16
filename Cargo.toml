@@ -1,0 +1,9 @@
+[package]
+name = "bacterium3d"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bevy = "0.15"
+bevy_egui = "0.32.0"
+egui = "0.30.0"
