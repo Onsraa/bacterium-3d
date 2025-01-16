@@ -1,0 +1,1 @@
+pub const GENERATION_DURATION: u64 = 2000;

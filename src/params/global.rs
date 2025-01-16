@@ -1,0 +1,1 @@
+pub const GLOBAL_SIZE_RATIO: f32 = 0.3;
