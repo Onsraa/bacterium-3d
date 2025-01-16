@@ -4,6 +4,7 @@ mod plugins;
 mod systems;
 mod resources;
 mod ui;
+mod algorithms;
 
 use bevy::prelude::*;
 use crate::components::bacterium::Bacterium;
@@ -27,51 +28,40 @@ fn setup(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    let mut bacterium = Bacterium {
+
+    let mut bacteria: Vec<Bacterium> = vec![];
+
+    bacteria.push(Bacterium {
         diet: Diet::Vegetarian,
         nb_flagella: 10,
         speed: 2.0,
-    };
-
-    let mut bacterium2 = Bacterium {
+    });
+    bacteria.push(Bacterium {
         diet: Diet::Omnivore,
         nb_flagella: 10,
         speed: 2.0,
-    };
-
-    let mut bacterium3 = Bacterium {
+    });
+    bacteria.push(Bacterium {
         diet: Diet::Carnivore,
         nb_flagella: 10,
         speed: 2.0,
-    };
+    });
+    bacteria.push(Bacterium {
+        diet: Diet::None,
+        nb_flagella: 10,
+        speed: 2.0,
+    });
 
-    let entity = (
-        bacterium,
-        Mesh3d(meshes.add(Sphere::new(BACTERIUM_SPHERE_RADIUS * GLOBAL_SIZE_RATIO).mesh().uv(32, 18))),
-        MeshMaterial3d(materials.add(bacterium_color(&bacterium.diet))),
-        Transform::from_xyz(0.0, 0.0, 0.0),
-    );
+    let mut y = -5.0;
 
-    let entity2 = (
-        bacterium2,
-        Mesh3d(meshes.add(Sphere::new(BACTERIUM_SPHERE_RADIUS * GLOBAL_SIZE_RATIO).mesh().uv(32, 18))),
-        MeshMaterial3d(materials.add(bacterium_color(&bacterium2.diet))),
-        Transform::from_xyz(0.0, 0.0, -5.0),
-    );
-
-    let entity3 = (
-        bacterium3,
-        Mesh3d(meshes.add(Sphere::new(BACTERIUM_SPHERE_RADIUS * GLOBAL_SIZE_RATIO).mesh().uv(32, 18))),
-        MeshMaterial3d(materials.add(bacterium_color(&bacterium3.diet))),
-        Transform::from_xyz(0.0, 0.0, 5.0),
-    );
-
-    let parent = commands.spawn(entity).id();
-    add_flagella(&mut commands, parent, &mut bacterium, &mut meshes, &mut materials);
-
-    let parent = commands.spawn(entity2).id();
-    add_flagella(&mut commands, parent, &mut bacterium2, &mut meshes, &mut materials);
-
-    let parent = commands.spawn(entity3).id();
-    add_flagella(&mut commands, parent, &mut bacterium3, &mut meshes, &mut materials);
+    for mut bacterium in bacteria.iter_mut() {
+        let parent = commands.spawn_empty()
+            .insert(*bacterium)
+            .insert(Mesh3d(meshes.add(Sphere::new(BACTERIUM_SPHERE_RADIUS * GLOBAL_SIZE_RATIO).mesh().uv(32, 18))))
+            .insert(MeshMaterial3d(materials.add(bacterium_color(&bacterium.diet))))
+            .insert(Transform::from_xyz(0.0, y, 0.0))
+            .id();
+        add_flagella(&mut commands, parent, &mut bacterium, &mut meshes, &mut materials);
+        y += 5.0;
+    }
 }
