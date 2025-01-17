@@ -4,8 +4,8 @@ use crate::params::simulation::GENERATION_DURATION;
 
 #[derive(Resource)]
 pub struct SimulationData {
-    generation_count: u32,
-    generation_duration: Timer,
+    pub generation_count: u32,
+    pub generation_duration: Timer,
 }
 
 impl Default for SimulationData {

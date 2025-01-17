@@ -1,9 +1,10 @@
 use bevy::prelude::*;
 
-#[derive(Component, Clone, Copy)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Diet {
     Vegetarian,
     Omnivore,
     Carnivore,
+    #[default]
     None
 }
