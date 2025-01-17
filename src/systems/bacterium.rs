@@ -74,7 +74,7 @@ pub fn spawn_bacteria(
         }
         let radius_max = 0.8 * window_size.width.min(window_size.height);
         let radius = circle_radius.0.min(radius_max);
-        let center_x = 0.0;
+        let center_y = 0.0;
         let center_z = 0.0;
 
         let angle_step = 2.0 * PI / (n as f32);
@@ -82,9 +82,9 @@ pub fn spawn_bacteria(
         let mut i = 0;
         for mut bacterium_transform in &mut query {
             let angle = i as f32 * angle_step;
-            let x = center_x + radius * angle.cos();
+            let y = center_y + radius * angle.cos();
             let z = center_z + radius * angle.sin();
-            bacterium_transform.translation = Vec3::new(0.0, x, z);
+            bacterium_transform.translation = Vec3::new(0.0, y, z);
             bacterium_transform.rotation = Quat::from_rotation_y(angle);
 
             i += 1;
