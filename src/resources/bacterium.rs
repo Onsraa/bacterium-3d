@@ -27,3 +27,6 @@ impl Default for BacteriaData {
         }
     }
 }
+
+#[derive(Component)]
+pub struct Flagella;

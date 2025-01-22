@@ -6,5 +6,6 @@ pub enum SimulationState {
     Refreshing,
     Ready,
     Running,
+    Updating,
     Paused,
 }

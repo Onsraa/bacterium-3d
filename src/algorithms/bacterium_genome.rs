@@ -1,5 +1,3 @@
-use crate::components::diet::Diet;
-use bevy::prelude::Color;
 use rand::Rng;
 
 /// Un génome est un `u32` de 32 bits

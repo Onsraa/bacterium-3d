@@ -1,6 +1,6 @@
-use crate::params::global::GLOBAL_SIZE_RATIO;
 use crate::params::bacterium::*;
 use crate::params::flagella::*;
+use crate::params::global::GLOBAL_SIZE_RATIO;
 
 use crate::components::bacterium::*;
 use crate::components::diet::*;
@@ -9,26 +9,34 @@ use crate::components::flagella::*;
 use crate::systems::bacterium::*;
 
 use bevy::prelude::*;
+use crate::resources::bacterium::Flagella;
 
 pub fn add_flagella(
     commands: &mut Commands,
     parent: Entity,
-    bacterium: &mut Bacterium,
+    bacterium: &Bacterium,
     meshes: &mut ResMut<Assets<Mesh>>,
     materials: &mut ResMut<Assets<StandardMaterial>>,
 ) {
     let directions = fibonacci_sphere_directions(bacterium.nb_flagella);
 
     let flagella_mesh = match flagella_shape_from_diet(&bacterium.diet) {
-        FlagellaShape::Sphere => {
-            Some(Mesh3d(meshes.add(Sphere::new(FLAGELLA_SPHERE_RADIUS * GLOBAL_SIZE_RATIO).mesh().uv(32, 18))))
-        },
-        FlagellaShape::Cube => {
-            Some(Mesh3d(meshes.add(Cuboid::new(FLAGELLA_CUBOID_X * GLOBAL_SIZE_RATIO, FLAGELLA_CUBOID_Y * GLOBAL_SIZE_RATIO, FLAGELLA_CUBOID_Z * GLOBAL_SIZE_RATIO))))
-        },
-        FlagellaShape::Cone => {
-            Some(Mesh3d(meshes.add(Cone::new(FLAGELLA_CONE_RADIUS * GLOBAL_SIZE_RATIO, FLAGELLA_CONE_HEIGHT * GLOBAL_SIZE_RATIO))))
-        },
+        FlagellaShape::Sphere => Some(Mesh3d(
+            meshes.add(
+                Sphere::new(FLAGELLA_SPHERE_RADIUS * GLOBAL_SIZE_RATIO)
+                    .mesh()
+                    .uv(32, 18),
+            ),
+        )),
+        FlagellaShape::Cube => Some(Mesh3d(meshes.add(Cuboid::new(
+            FLAGELLA_CUBOID_X * GLOBAL_SIZE_RATIO,
+            FLAGELLA_CUBOID_Y * GLOBAL_SIZE_RATIO,
+            FLAGELLA_CUBOID_Z * GLOBAL_SIZE_RATIO,
+        )))),
+        FlagellaShape::Cone => Some(Mesh3d(meshes.add(Cone::new(
+            FLAGELLA_CONE_RADIUS * GLOBAL_SIZE_RATIO,
+            FLAGELLA_CONE_HEIGHT * GLOBAL_SIZE_RATIO,
+        )))),
         FlagellaShape::None => None,
     };
 
@@ -47,11 +55,9 @@ pub fn add_flagella(
             rotation,
             ..Default::default()
         };
-        let cone_entity = commands.spawn((
-            flagella_mesh.clone(),
-            material.clone(),
-            transform,
-        )).id();
+        let cone_entity = commands
+            .spawn((Flagella, flagella_mesh.clone(), material.clone(), transform))
+            .id();
         commands.entity(parent).add_child(cone_entity);
     }
 }
